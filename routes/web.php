@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,14 +15,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::get('/contacts/create', function () {
+    return Inertia::render('Contacts/Create');
 });
 
-require __DIR__.'/auth.php';
+Route::get('/contacts', function () {
+    return Inertia::render('Contacts/ShowAll');
+});
+
+Route::post('/api/contacts', [ContactController::class, 'store']);
+Route::get('/api/contacts/all', [ContactController::class, 'index']);
+
+Route::get('/contacts/{contact}/addresses/create', [AddressController::class, 'create'])->name('contacts.addresses.create');
+Route::post('/contacts/{contact}/addresses', [AddressController::class, 'store']);
+Route::put('/api/contacts/{contact}/addresses/{address}', [AddressController::class, 'update']);
+
+require __DIR__ . '/auth.php';
