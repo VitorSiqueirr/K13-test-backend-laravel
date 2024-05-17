@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 
 export default function ShowAllContacts() {
     const [contacts, setContacts] = useState([]);
@@ -19,9 +19,16 @@ export default function ShowAllContacts() {
 
     return (
         <div>
-            <h1>Todos os Contatos</h1>
+            <Head title="Agenda" />
+            <h1>Agenda</h1>
             <Link href="/contacts/create" className="btn btn-secondary ml-2">
                 Criar novo Contato
+            </Link>
+            <Link
+                href="/contacts/addresses/create"
+                className="btn btn-secondary ml-2"
+            >
+                Editar/Vincular Endereço
             </Link>
             <table className="table table-striped">
                 <thead>

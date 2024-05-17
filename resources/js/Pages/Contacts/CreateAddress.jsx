@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Inertia } from "@inertiajs/inertia";
+import { Head, Link } from "@inertiajs/react";
 
-export default function CreateAddress({ contacts, states, selectedContact }) {
-    const [contactId, setContactId] = useState(
-        selectedContact ? selectedContact.id : ""
-    );
+export default function CreateAddress({ states, contacts }) {
+    const [contactId, setContactId] = useState("");
     const [cep, setCep] = useState("");
     const [street, setStreet] = useState("");
     const [number, setNumber] = useState("");
@@ -15,30 +14,28 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        if (selectedContact && selectedContact.address) {
-            setCep(selectedContact.address.cep);
-            setStreet(selectedContact.address.street);
-            setNumber(selectedContact.address.number);
-            setNeighborhood(selectedContact.address.neighborhood);
-            setCity(selectedContact.address.city);
-            setState(selectedContact.address.state);
+        if (contactId) {
+            axios
+                .get(`/api/contacts/${contactId}/addresses`)
+                .then((response) => {
+                    setCep(response.data.cep || "");
+                    setStreet(response.data.street || "");
+                    setNumber(response.data.number || "");
+                    setNeighborhood(response.data.neighborhood || "");
+                    setCity(response.data.city || "");
+                    setState(response.data.state || "");
+                })
+                .catch((error) => {
+                    console.error("Erro ao buscar endereço:", error);
+                });
         }
-    }, [selectedContact]);
+    }, [contactId]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const requestMethod =
-            selectedContact && selectedContact.address ? "put" : "post";
-        const requestUrl =
-            selectedContact && selectedContact.address
-                ? `/api/contacts/${contactId}/addresses/${selectedContact.address.id}`
-                : `/api/contacts/${contactId}/addresses`;
-
-        axios({
-            method: requestMethod,
-            url: requestUrl,
-            data: {
+        try {
+            const response = await axios.post("/api/contacts/addresses", {
                 contact_id: contactId,
                 cep,
                 street,
@@ -46,25 +43,22 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
                 neighborhood,
                 city,
                 state,
-            },
-        })
-            .then((response) => {
-                Inertia.visit(`/contacts/${contactId}`);
-            })
-            .catch((error) => {
-                if (
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.errors
-                ) {
-                    setErrors(error.response.data.errors);
-                } else {
-                    console.error("Erro inesperado:", error);
-                    setErrors({
-                        general: "Ocorreu um erro ao salvar o endereço.",
-                    });
-                }
             });
+            alert(response);
+
+            Inertia.visit("/contacts");
+        } catch (error) {
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.errors
+            ) {
+                setErrors(error.response.data.errors);
+            } else {
+                console.error("Erro inesperado:", error);
+                setErrors({ general: "Ocorreu um erro ao salvar o endereço." });
+            }
+        }
     };
 
     const handleCepChange = (event) => {
@@ -89,9 +83,18 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
 
     return (
         <div>
-            <h1>Criar Endereço</h1>
+            <Head title="Vincular Endereço" />
+            <h1>Vincular Endereço</h1>
 
-            {/* ... (exibição de erros) */}
+            {Object.keys(errors).length > 0 && (
+                <div className="alert alert-danger">
+                    <ul>
+                        {Object.values(errors).map((error, index) => (
+                            <li key={index}>{error}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -105,13 +108,11 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
                         <option value="">Selecione um contato</option>
                         {contacts.map((contact) => (
                             <option key={contact.id} value={contact.id}>
-                                {contact.name}
+                                {contact.name} {contact.id}
                             </option>
                         ))}
                     </select>
                 </div>
-
-                {/* ... (outros campos do formulário, incluindo o CEP com handleCepChange) */}
 
                 <div className="form-group">
                     <label htmlFor="cep">CEP:</label>
@@ -123,6 +124,7 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
                         onChange={handleCepChange}
                     />
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="street">Rua:</label>
                     <input
@@ -131,6 +133,39 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
                         id="street"
                         value={street}
                         onChange={(e) => setStreet(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="number">Número da Casa:</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="number"
+                        value={number}
+                        onChange={(e) => setNumber(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="neighborhood">Bairro:</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="neighborhood"
+                        value={neighborhood}
+                        onChange={(e) => setNeighborhood(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="city">Cidade:</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="city"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                     />
                 </div>
 
@@ -150,9 +185,13 @@ export default function CreateAddress({ contacts, states, selectedContact }) {
                         ))}
                     </select>
                 </div>
+
                 <button type="submit" className="btn btn-primary">
                     Salvar
                 </button>
+                <Link href="/contacts" className="btn btn-secondary ml-2">
+                    Voltar para Agenda
+                </Link>
             </form>
         </div>
     );

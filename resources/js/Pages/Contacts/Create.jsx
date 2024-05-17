@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 
 export default function CreateContact() {
     const [name, setName] = useState("");
@@ -21,6 +21,7 @@ export default function CreateContact() {
             })
             .then((response) => {
                 alert("Contato adicionado com sucesso! \n");
+                Inertia.visit("/contacts/addresses/create");
             })
             .catch((error) => {
                 if (
@@ -37,6 +38,7 @@ export default function CreateContact() {
 
     return (
         <div>
+            <Head title="Criar Contato" />
             <h1>Criar Contato</h1>
 
             {Object.keys(errors).length > 0 && (
@@ -94,8 +96,14 @@ export default function CreateContact() {
                     Salvar
                 </button>
 
+                <Link
+                    href="/contacts/addresses/create"
+                    className="btn btn-secondary ml-2"
+                >
+                    Vincular Endereços
+                </Link>
                 <Link href="/contacts" className="btn btn-secondary ml-2">
-                    Ver Contatos
+                    Voltar para Agenda
                 </Link>
             </form>
         </div>

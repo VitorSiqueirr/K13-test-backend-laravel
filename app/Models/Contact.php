@@ -15,4 +15,9 @@ class Contact extends Model
         'email',
         'birthday',
     ];
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
 }

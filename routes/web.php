@@ -15,19 +15,24 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/contacts/create', function () {
-    return Inertia::render('Contacts/Create');
-});
-
+// Rota para a visualização dos contatos
 Route::get('/contacts', function () {
     return Inertia::render('Contacts/ShowAll');
 });
 
-Route::post('/api/contacts', [ContactController::class, 'store']);
-Route::get('/api/contacts/all', [ContactController::class, 'index']);
+// Rota para a criação de contatos
+Route::get('/contacts/create', function () {
+    return Inertia::render('Contacts/Create');
+});
 
-Route::get('/contacts/{contact}/addresses/create', [AddressController::class, 'create'])->name('contacts.addresses.create');
-Route::post('/contacts/{contact}/addresses', [AddressController::class, 'store']);
-Route::put('/api/contacts/{contact}/addresses/{address}', [AddressController::class, 'update']);
+// Rota padrão para vincular endereço
+Route::get('/contacts/addresses/create', [AddressController::class, 'create'])->name('contacts.addresses.create');
+
+// Rotas para API
+Route::post('/api/contacts', [ContactController::class, 'store']);
+Route::post('/api/contacts/addresses', [AddressController::class, 'store']);
+Route::get('/api/contacts/all', [ContactController::class, 'index']);
+Route::get('/api/contacts/{contactId}/addresses', [AddressController::class, 'findById']);
+
 
 require __DIR__ . '/auth.php';
