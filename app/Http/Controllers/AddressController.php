@@ -46,7 +46,6 @@ class AddressController extends Controller
   {
     $contact = Contact::findOrFail($contactId);
     $address = $contact->address;
-    echo $address;
     return response()->json($address);
   }
 

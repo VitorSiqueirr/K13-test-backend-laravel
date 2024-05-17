@@ -44,9 +44,7 @@ export default function CreateAddress({ states, contacts }) {
                 city,
                 state,
             });
-            alert(response);
-
-            Inertia.visit("/contacts");
+            alert(response.data.message);
         } catch (error) {
             if (
                 error.response &&
