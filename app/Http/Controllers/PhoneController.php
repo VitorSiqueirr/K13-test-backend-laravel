@@ -21,14 +21,19 @@ class PhoneController extends Controller
     {
         $validatedData = $request->validate([
             'contact_id' => 'required|exists:contacts,id',
-            'commercial_phone' => 'nullable|unique:phones',
-            'residencial_phone' => 'nullable|unique:phones',
-            'mobile_phone' => 'required|unique:phones',
+            'commercial_phone' => 'nullable',
+            'residencial_phone' => 'nullable',
+            'mobile_phone' => 'required',
         ]);
 
         $contact = Contact::findOrFail($validatedData['contact_id']);
 
-        $contact->phone()->create($validatedData);
+        Log::info($contact);
+        Log::info("Chegou aqui no updateOrCreate");
+        $contact->phone()->updateOrCreate(
+            ['contact_id' => $validatedData['contact_id']],
+            $validatedData
+        );
 
         return response()->json(["message" => "Telefone vinculado com sucesso!"], 201);
     }

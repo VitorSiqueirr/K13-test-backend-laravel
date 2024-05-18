@@ -19,7 +19,7 @@ class ContactController extends Controller
 
         $contact = Contact::create($validatedData);
 
-        return response()->json($contact, 201);
+        return response()->json(["message" => "Contato criado com sucesso!"], 201);
     }
 
     public function index()
