@@ -20,4 +20,9 @@ class Contact extends Model
     {
         return $this->hasOne(Address::class);
     }
+
+    public function phone()
+    {
+        return $this->hasMany(Phone::class);
+    }
 }

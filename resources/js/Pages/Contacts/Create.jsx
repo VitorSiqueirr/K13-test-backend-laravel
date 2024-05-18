@@ -21,7 +21,6 @@ export default function CreateContact() {
             })
             .then((response) => {
                 alert("Contato adicionado com sucesso! \n");
-                Inertia.visit("/contacts/addresses/create");
             })
             .catch((error) => {
                 if (

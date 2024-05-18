@@ -30,6 +30,12 @@ export default function ShowAllContacts() {
             >
                 Editar/Vincular Endereço
             </Link>
+            <Link
+                href="/contacts/addresses/phones"
+                className="btn btn-secondary ml-2 "
+            >
+                Editar/Vincular Telefone
+            </Link>
             <table className="table table-striped">
                 <thead>
                     <tr>
