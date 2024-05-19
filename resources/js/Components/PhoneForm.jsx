@@ -2,17 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import IMask from "imask";
 
-export default function PhoneForm({ contacts, initialValues = {}, onSubmit }) {
-    const [contactId, setContactId] = useState(initialValues.contact_id || "");
-    const [commercialPhone, setCommercialPhone] = useState(
-        initialValues.commercial_phone || ""
-    );
-    const [residentialPhone, setResidentialPhone] = useState(
-        initialValues.residencial_phone || ""
-    );
-    const [mobilePhone, setMobilePhone] = useState(
-        initialValues.mobile_phone || ""
-    );
+export default function PhoneForm({ contacts, onSubmit }) {
+    const [contactId, setContactId] = useState("");
+    const [commercialPhone, setCommercialPhone] = useState("");
+    const [residentialPhone, setResidentialPhone] = useState("");
+    const [mobilePhone, setMobilePhone] = useState("");
     const [errors, setErrors] = useState({});
 
     const commercialPhoneRef = useRef(null);

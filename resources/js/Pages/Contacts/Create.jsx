@@ -23,21 +23,22 @@ export default function CreateContact() {
     };
 
     return (
-        <div>
+        <div className="agenda-container">
             <Head title="Criar Contato" />
-            <h1>Criar Contato</h1>
+            <h1 className="title">Criar Contato</h1>
+            <nav className="navbar">
+                <Link href="/contacts" className="nav-button">
+                    Voltar para Agenda
+                </Link>
+                <Link href="/contacts/addresses/create" className="nav-button">
+                    Editar/Vincular Endereço
+                </Link>
+                <Link href="/contacts/addresses/phones" className="nav-button">
+                    Editar/Vincular Telefone
+                </Link>
+            </nav>
 
             <ContactForm onSubmit={handleSubmit} />
-
-            <Link
-                href="/contacts/addresses/create"
-                className="btn btn-secondary ml-2"
-            >
-                Vincular Endereços
-            </Link>
-            <Link href="/contacts" className="btn btn-secondary ml-2">
-                Voltar para Agenda
-            </Link>
         </div>
     );
 }

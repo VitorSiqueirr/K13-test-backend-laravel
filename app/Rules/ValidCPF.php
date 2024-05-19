@@ -46,6 +46,6 @@ class ValidCPF implements Rule
      */
     public function message()
     {
-        return 'O CPF informado é inválido.';
+        return 'The cpf is invalid.';
     }
 }
