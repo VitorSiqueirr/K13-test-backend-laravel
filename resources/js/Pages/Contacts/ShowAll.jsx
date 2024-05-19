@@ -3,29 +3,27 @@ import { Head, Link } from "@inertiajs/react";
 import useContactSearch from "@/hooks/useContactSearch";
 import SearchBar from "@/Components/SearchBar";
 import ContactList from "@/Components/ContactList";
+import "../../../css/ShowAll.css";
 
 export default function ShowAllContacts() {
     const { filteredContacts, searchTerm, setSearchTerm } = useContactSearch();
 
     return (
-        <div>
+        <div className="agenda-container">
             <Head title="Agenda" />
-            <h1>Agenda</h1>
-            <Link href="/contacts/create" className="btn btn-secondary ml-2">
-                Criar novo Contato
-            </Link>
-            <Link
-                href="/contacts/addresses/create"
-                className="btn btn-secondary ml-2"
-            >
-                Editar/Vincular Endereço
-            </Link>
-            <Link
-                href="/contacts/addresses/phones"
-                className="btn btn-secondary ml-2 "
-            >
-                Editar/Vincular Telefone
-            </Link>
+            <h1 className="title">Agenda</h1>
+
+            <nav className="navbar">
+                <Link href="/contacts/create" className="nav-button">
+                    Criar novo Contato
+                </Link>
+                <Link href="/contacts/addresses/create" className="nav-button">
+                    Editar/Vincular Endereço
+                </Link>
+                <Link href="/contacts/addresses/phones" className="nav-button">
+                    Editar/Vincular Telefone
+                </Link>
+            </nav>
 
             <SearchBar
                 searchTerm={searchTerm}
