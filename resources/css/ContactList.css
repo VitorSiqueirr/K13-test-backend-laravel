@@ -1,8 +1,9 @@
 .list-container {
     text-align: center;
+    padding: 1rem;
     border: 1px solid black;
     border-radius: 0.5rem;
-    padding: 1rem;
+    box-shadow: 0 0 8px 4px rgb(0, 0, 0, 0.2);
 }
 
 .contacts-table {

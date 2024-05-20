@@ -1,0 +1,38 @@
+.address-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    width: fit-content;
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    border-radius: 0.5rem;
+    gap: 1rem;
+    box-shadow: 0 0 8px 4px rgb(0, 0, 0, 0.2);
+}
+
+.address-form .form-fields {
+    justify-content: center;
+}
+
+.fields-container .form-fields {
+    justify-content: space-between;
+}
+
+.fields-container .form-label {
+    width: 100%;
+    text-align: end;
+}
+
+.fields-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.fields-sub-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}

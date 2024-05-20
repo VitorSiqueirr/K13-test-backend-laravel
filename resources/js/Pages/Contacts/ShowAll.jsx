@@ -3,7 +3,6 @@ import { Head, Link } from "@inertiajs/react";
 import useContactSearch from "@/hooks/useContactSearch";
 import SearchBar from "@/Components/SearchBar";
 import ContactList from "@/Components/ContactList";
-import "../../../css/ShowAll.css";
 
 export default function ShowAllContacts() {
     const { filteredContacts, searchTerm, setSearchTerm } = useContactSearch();
@@ -15,7 +14,7 @@ export default function ShowAllContacts() {
 
             <nav className="navbar">
                 <Link href="/contacts/create" className="nav-button">
-                    Criar novo Contato
+                    Criar Novo Contato
                 </Link>
                 <Link href="/contacts/addresses/create" className="nav-button">
                     Editar/Vincular Endereço

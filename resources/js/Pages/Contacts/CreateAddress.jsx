@@ -17,28 +17,35 @@ export default function CreateAddress({ states, contacts }) {
                 error.response.data &&
                 error.response.data.errors
             ) {
-                setErrors(error.response.data.errors);
+                return error.response;
             } else {
-                console.error("Erro inesperado:", error);
-                setErrors({ general: "Ocorreu um erro ao salvar o endereço." });
+                throw error;
             }
         }
     };
 
     return (
-        <div>
+        <div className="agenda-container">
             <Head title="Vincular Endereço" />
-            <h1>Vincular Endereço</h1>
+            <h1 className="title">Vincular Endereço</h1>
+
+            <nav className="navbar">
+                <Link href="/contacts" className="nav-button">
+                    Voltar Para Agenda
+                </Link>
+                <Link href="/contacts/create" className="nav-button">
+                    Criar Novo Contato
+                </Link>
+                <Link href="/contacts/addresses/phones" className="nav-button">
+                    Editar/Vincular Telefone
+                </Link>
+            </nav>
 
             <AddressForm
                 states={states}
                 contacts={contacts}
                 onSubmit={handleSubmit}
             />
-
-            <Link href="/contacts" className="btn btn-secondary ml-2">
-                Voltar para Agenda
-            </Link>
         </div>
     );
 }

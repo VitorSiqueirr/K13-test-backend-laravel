@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import IMask from "imask";
+import "../../css/PhoneForm.css";
 
 export default function PhoneForm({ contacts, onSubmit }) {
     const [contactId, setContactId] = useState("");
     const [commercialPhone, setCommercialPhone] = useState("");
     const [residentialPhone, setResidentialPhone] = useState("");
     const [mobilePhone, setMobilePhone] = useState("");
-    const [errors, setErrors] = useState({});
+    const [alert, setAlert] = useState("");
 
     const commercialPhoneRef = useRef(null);
     const residentialPhoneRef = useRef(null);
@@ -67,10 +68,10 @@ export default function PhoneForm({ contacts, onSubmit }) {
             alert(response.data.message);
         } catch (error) {
             if (error.response?.data?.errors) {
-                setErrors({ general: error.response.data.errors });
+                setAlert({ general: error.response.data.errors });
             } else {
                 console.error("Erro inesperado:", error);
-                setErrors({ general: "Ocorreu um erro ao salvar o telefone." });
+                setAlert({ general: "Ocorreu um erro ao salvar o telefone." });
             }
         }
     };
@@ -89,73 +90,79 @@ export default function PhoneForm({ contacts, onSubmit }) {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            {Object.keys(errors).length > 0 && (
-                <div className="alert alert-danger">
-                    <ul>
-                        {Object.values(errors).map((error, index) => (
-                            <li key={index}>{error}</li>
+        <div className="form-container">
+            <form className="phone-form" onSubmit={handleSubmit}>
+                <div className="form-fields">
+                    <label className="form-label" htmlFor="contact_id">
+                        Contato:
+                    </label>
+                    <select
+                        className="form-select"
+                        id="contact_id"
+                        value={contactId}
+                        onChange={(e) => setContactId(e.target.value)}
+                    >
+                        <option value="">Selecione um contato</option>
+                        {contacts.map((contact) => (
+                            <option key={contact.id} value={contact.id}>
+                                {contact.name}
+                            </option>
                         ))}
-                    </ul>
+                    </select>
+                </div>
+
+                <div className="form-fields">
+                    <label className="form-label" htmlFor="commercial_phone">
+                        Telefone Comercial:
+                    </label>
+                    <input
+                        type="text"
+                        className="form-input"
+                        id="commercial_phone"
+                        value={commercialPhone}
+                        onChange={(e) => handlePhoneChange(e, "commercial")}
+                        ref={commercialPhoneRef}
+                    />
+                </div>
+
+                <div className="form-fields">
+                    <label className="form-label" htmlFor="residential_phone">
+                        Telefone Residencial:
+                    </label>
+                    <input
+                        type="text"
+                        className="form-input"
+                        id="residential_phone"
+                        value={residentialPhone}
+                        onChange={(e) => handlePhoneChange(e, "residential")}
+                        ref={residentialPhoneRef}
+                    />
+                </div>
+
+                <div className="form-fields">
+                    <label className="form-label" htmlFor="mobile_phone">
+                        Telefone Celular:
+                    </label>
+                    <input
+                        type="text"
+                        className="form-input"
+                        id="mobile_phone"
+                        value={mobilePhone}
+                        onChange={handleMobilePhoneChange}
+                        ref={mobilePhoneRef}
+                        required
+                    />
+                </div>
+
+                <button type="submit" className="save-button">
+                    Salvar
+                </button>
+            </form>
+            {Object.keys(alert).length > 0 && (
+                <div className="alert-container">
+                    <p className="alert-message">{alert}</p>
                 </div>
             )}
-            <div className="form-group">
-                <label htmlFor="contact_id">Contato:</label>
-                <select
-                    className="form-control"
-                    id="contact_id"
-                    value={contactId}
-                    onChange={(e) => setContactId(e.target.value)}
-                >
-                    <option value="">Selecione um contato</option>
-                    {contacts.map((contact) => (
-                        <option key={contact.id} value={contact.id}>
-                            {contact.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="commercial_phone">Telefone Comercial:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="commercial_phone"
-                    value={commercialPhone}
-                    onChange={(e) => handlePhoneChange(e, "commercial")}
-                    ref={commercialPhoneRef}
-                />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="residential_phone">Telefone Residencial:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="residential_phone"
-                    value={residentialPhone}
-                    onChange={(e) => handlePhoneChange(e, "residential")}
-                    ref={residentialPhoneRef}
-                />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="mobile_phone">Telefone Celular:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="mobile_phone"
-                    value={mobilePhone}
-                    onChange={handleMobilePhoneChange}
-                    ref={mobilePhoneRef}
-                    required
-                />
-            </div>
-
-            <button type="submit" className="btn btn-primary">
-                Salvar
-            </button>
-        </form>
+        </div>
     );
 }

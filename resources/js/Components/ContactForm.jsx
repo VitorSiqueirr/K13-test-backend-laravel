@@ -6,7 +6,7 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
     const [cpf, setCpf] = useState(initialValues.cpf || "");
     const [email, setEmail] = useState(initialValues.email || "");
     const [birthdate, setBirthdate] = useState(initialValues.birthday || "");
-    const [alert, setAlert] = useState({});
+    const [alert, setAlert] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -28,7 +28,6 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
             ) {
                 setAlert(error.response.data.errors);
             } else {
-                console.error("Unexpected error:", error);
                 setAlert({ general: "There's an error saving the contact." });
             }
         }
@@ -36,12 +35,6 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
 
     return (
         <div className="form-container">
-            {Object.keys(alert).length > 0 && (
-                <div className="alert-container">
-                    <p className="alert-message">{alert}</p>
-                </div>
-            )}
-
             <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-fields">
                     <label className="form-label" htmlFor="name">
@@ -97,6 +90,11 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
                     Salvar
                 </button>
             </form>
+            {Object.keys(alert).length > 0 && (
+                <div className="alert-container">
+                    <p className="alert-message">{alert}</p>
+                </div>
+            )}
         </div>
     );
 }

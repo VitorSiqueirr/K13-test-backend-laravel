@@ -1,11 +1,8 @@
 import PhoneForm from "@/Components/PhoneForm";
 import { Head, Link } from "@inertiajs/react";
 import axios from "axios";
-import { useState } from "react";
 
 export default function CreatePhone({ contacts }) {
-    const [errors, setErrors] = useState({});
-
     const handleSubmit = async (formData) => {
         setErrors({});
         try {
@@ -17,32 +14,32 @@ export default function CreatePhone({ contacts }) {
                 error.response.data &&
                 error.response.data.errors
             ) {
-                setErrors(error.response.data.errors);
+                return error.response;
             } else {
                 console.error("Erro inesperado:", error);
-                setErrors({ general: "Ocorreu um erro ao salvar o telefone." });
+                throw error;
             }
         }
     };
 
     return (
-        <div>
+        <div className="agenda-container">
             <Head title="Vincular Telefone" />
-            <h1>Vincular Telefone</h1>
-            {Object.keys(errors).length > 0 && (
-                <div className="alert alert-danger">
-                    <ul>
-                        {Object.values(errors).map((error, index) => (
-                            <li key={index}>{error}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            <PhoneForm contacts={contacts} onSubmit={handleSubmit} />
+            <h1 className="title">Vincular Telefone</h1>
 
-            <Link href="/contacts" className="btn btn-secondary ml-2">
-                Criar novo Contato
-            </Link>
+            <nav className="navbar">
+                <Link href="/contacts" className="nav-button">
+                    Voltar Para Agenda
+                </Link>
+                <Link href="/contacts" className="nav-button">
+                    Criar Novo Contato
+                </Link>
+                <Link href="/contacts/addresses/create" className="nav-button">
+                    Editar/Vincular Endereço
+                </Link>
+            </nav>
+
+            <PhoneForm contacts={contacts} onSubmit={handleSubmit} />
         </div>
     );
 }
