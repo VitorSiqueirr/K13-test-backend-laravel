@@ -16,7 +16,6 @@ export default function CreateContact() {
             ) {
                 return error.response;
             } else {
-                console.error("Erro inesperado:", error);
                 throw error;
             }
         }

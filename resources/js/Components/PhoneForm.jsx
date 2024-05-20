@@ -3,7 +3,12 @@ import axios from "axios";
 import IMask from "imask";
 import "../../css/PhoneForm.css";
 
-export default function PhoneForm({ contacts, onSubmit }) {
+export default function PhoneForm({
+    contacts,
+    onSubmit,
+    setPhoneExists,
+    setPhoneId,
+}) {
     const [contactId, setContactId] = useState("");
     const [commercialPhone, setCommercialPhone] = useState("");
     const [residentialPhone, setResidentialPhone] = useState("");
@@ -40,12 +45,22 @@ export default function PhoneForm({ contacts, onSubmit }) {
                 .get(`/api/contacts/${contactId}/phones`)
                 .then((response) => {
                     const data = response.data[0] || {};
-                    setCommercialPhone(data.commercial_phone || "");
-                    setResidentialPhone(data.residencial_phone || "");
-                    setMobilePhone(data.mobile_phone || "");
+                    if (data.id) {
+                        setPhoneExists(true);
+                        setPhoneId(data.id);
+                        setCommercialPhone(data.commercial_phone || "");
+                        setResidentialPhone(data.residencial_phone || "");
+                        setMobilePhone(data.mobile_phone || "");
+                    } else {
+                        setPhoneExists(false);
+                        setPhoneId(null);
+                        setCommercialPhone("");
+                        setResidentialPhone("");
+                        setMobilePhone("");
+                    }
                 })
                 .catch((error) => {
-                    console.error("Erro ao buscar telefone: ", error);
+                    setAlert("Error finding the phone: ", error);
                 });
         } else {
             setCommercialPhone("");
@@ -65,13 +80,12 @@ export default function PhoneForm({ contacts, onSubmit }) {
                 mobile_phone: mobilePhone,
             });
 
-            alert(response.data.message);
+            setAlert("Success: " + response.data.message);
         } catch (error) {
-            if (error.response?.data?.errors) {
-                setAlert({ general: error.response.data.errors });
+            if (error.response && error.response.data) {
+                setAlert(`${error.response.data.message}`);
             } else {
-                console.error("Erro inesperado:", error);
-                setAlert({ general: "Ocorreu um erro ao salvar o telefone." });
+                setAlert(" general: There's an error saving the contact.");
             }
         }
     };
@@ -101,6 +115,7 @@ export default function PhoneForm({ contacts, onSubmit }) {
                         id="contact_id"
                         value={contactId}
                         onChange={(e) => setContactId(e.target.value)}
+                        required
                     >
                         <option value="">Selecione um contato</option>
                         {contacts.map((contact) => (
@@ -160,7 +175,11 @@ export default function PhoneForm({ contacts, onSubmit }) {
             </form>
             {Object.keys(alert).length > 0 && (
                 <div className="alert-container">
-                    <p className="alert-message">{alert}</p>
+                    {alert.toLowerCase().includes("success") ? (
+                        <p className="alert-message success">{alert}</p>
+                    ) : (
+                        <p className="alert-message error">{alert}</p>
+                    )}
                 </div>
             )}
         </div>

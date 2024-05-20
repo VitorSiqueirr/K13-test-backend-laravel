@@ -19,16 +19,12 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
                 birthday: birthdate,
             });
 
-            setAlert(response.data.message);
+            setAlert("Success: " + response.data.message);
         } catch (error) {
-            if (
-                error.response &&
-                error.response.data &&
-                error.response.data.errors
-            ) {
-                setAlert(error.response.data.errors);
+            if (error.response && error.response.data) {
+                setAlert(`${error.response.data.message}`);
             } else {
-                setAlert({ general: "There's an error saving the contact." });
+                setAlert(" general: There's an error saving the contact.");
             }
         }
     };
@@ -46,6 +42,7 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
                         id="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        required
                     />
                 </div>
 
@@ -59,6 +56,7 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
                         id="cpf"
                         value={cpf}
                         onChange={(e) => setCpf(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="form-fields">
@@ -71,6 +69,7 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="form-fields">
@@ -83,6 +82,7 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
                         id="birthdate"
                         value={birthdate}
                         onChange={(e) => setBirthdate(e.target.value)}
+                        required
                     />
                 </div>
 
@@ -92,7 +92,11 @@ export default function ContactForm({ initialValues = {}, onSubmit }) {
             </form>
             {Object.keys(alert).length > 0 && (
                 <div className="alert-container">
-                    <p className="alert-message">{alert}</p>
+                    {alert.toLowerCase().includes("success") ? (
+                        <p className="alert-message success">{alert}</p>
+                    ) : (
+                        <p className="alert-message error">{alert}</p>
+                    )}
                 </div>
             )}
         </div>

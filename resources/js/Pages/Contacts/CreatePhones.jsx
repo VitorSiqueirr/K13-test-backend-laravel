@@ -1,12 +1,23 @@
 import PhoneForm from "@/Components/PhoneForm";
 import { Head, Link } from "@inertiajs/react";
 import axios from "axios";
+import { useState } from "react";
 
 export default function CreatePhone({ contacts }) {
+    const [phoneExists, setPhoneExists] = useState(false);
+    const [phoneId, setPhoneId] = useState(null);
+
     const handleSubmit = async (formData) => {
-        setErrors({});
         try {
-            const response = await axios.post("/api/contacts/phones", formData);
+            let response;
+            if (phoneExists) {
+                response = await axios.put(
+                    `/api/contacts/phones/${phoneId}`,
+                    formData
+                );
+            } else {
+                response = await axios.post("/api/contacts/phones", formData);
+            }
             return response;
         } catch (error) {
             if (
@@ -16,7 +27,6 @@ export default function CreatePhone({ contacts }) {
             ) {
                 return error.response;
             } else {
-                console.error("Erro inesperado:", error);
                 throw error;
             }
         }
@@ -31,7 +41,7 @@ export default function CreatePhone({ contacts }) {
                 <Link href="/contacts" className="nav-button">
                     Voltar Para Agenda
                 </Link>
-                <Link href="/contacts" className="nav-button">
+                <Link href="/contacts/create" className="nav-button">
                     Criar Novo Contato
                 </Link>
                 <Link href="/contacts/addresses/create" className="nav-button">
@@ -39,7 +49,12 @@ export default function CreatePhone({ contacts }) {
                 </Link>
             </nav>
 
-            <PhoneForm contacts={contacts} onSubmit={handleSubmit} />
+            <PhoneForm
+                contacts={contacts}
+                onSubmit={handleSubmit}
+                setPhoneExists={setPhoneExists}
+                setPhoneId={setPhoneId}
+            />
         </div>
     );
 }

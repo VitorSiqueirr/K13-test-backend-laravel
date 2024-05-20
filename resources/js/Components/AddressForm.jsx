@@ -13,6 +13,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
     const [alert, setAlert] = useState("");
 
     useEffect(() => {
+        setAlert("");
         if (contactId) {
             axios
                 .get(`/api/contacts/${contactId}/addresses`)
@@ -32,7 +33,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        setAlert("");
         try {
             const response = await onSubmit({
                 contact_id: contactId,
@@ -43,14 +44,14 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                 city,
                 state,
             });
-            setAlert(response.data.message);
+            setAlert("Success: " + response.data.message);
         } catch (error) {
             if (
                 error.response &&
                 error.response.data &&
                 error.response.data.errors
             ) {
-                setAlert(error.response.data.errors);
+                setAlert(`general: ${error.response.data.errors}`);
             } else {
                 setAlert(
                     "general: There's an error linking/saving the address."
@@ -91,6 +92,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                         id="contact_id"
                         value={contactId}
                         onChange={(e) => setContactId(e.target.value)}
+                        required
                     >
                         <option value="">Selecione um contato</option>
                         {contacts.map((contact) => (
@@ -112,6 +114,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                                 id="cep"
                                 value={cep}
                                 onChange={handleCepChange}
+                                required
                             />
                         </div>
 
@@ -125,6 +128,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                                 id="street"
                                 value={street}
                                 onChange={(e) => setStreet(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -138,6 +142,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                                 id="number"
                                 value={number}
                                 onChange={(e) => setNumber(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
@@ -158,6 +163,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                                 onChange={(e) =>
                                     setNeighborhood(e.target.value)
                                 }
+                                required
                             />
                         </div>
 
@@ -171,6 +177,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                                 id="city"
                                 value={city}
                                 onChange={(e) => setCity(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -183,6 +190,7 @@ export default function AddressForm({ states, contacts, onSubmit }) {
                                 id="state"
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
+                                required
                             >
                                 <option value="">Selecione um estado</option>
                                 {states.map((stateOption) => (
@@ -203,7 +211,11 @@ export default function AddressForm({ states, contacts, onSubmit }) {
             </form>
             {Object.keys(alert).length > 0 && (
                 <div className="alert-container">
-                    <p className="alert-message">{alert}</p>
+                    {alert.toLowerCase().includes("success") ? (
+                        <p className="alert-message success">{alert}</p>
+                    ) : (
+                        <p className="alert-message error">{alert}</p>
+                    )}
                 </div>
             )}
         </div>
